@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] breadObject;                              //¹°Ã¼ ÇÁ¸®ÆÕÀ» °¡Á®¿Â´Ù.  (¹è¿­·Î º¯°æ =[])
-    public Transform genTransform;                                 //»ı¼º À§Ä¡ ¼³Á¤ 
-    public float timeCheck;                                        //»ı¼º ½Ã°£ ¼³Á¤ º¯¼ö (flaot)
-    public bool isGen;                                             //»ı¼º Ã¼Å© (bbol)
+    public GameObject[] breadObject;                              //ë¬¼ì²´ í”„ë¦¬íŒ¹ì„ ê°€ì ¸ì˜¨ë‹¤.  (ë°°ì—´ë¡œ ë³€ê²½ =[])
+    public Transform genTransform;                                 //ìƒì„± ìœ„ì¹˜ ì„¤ì • 
+    public float timeCheck;                                        //ìƒì„± ì‹œê°„ ì„¤ì • ë³€ìˆ˜ (flaot)
+    public bool isGen;                                             //ìƒì„± ì²´í¬ (bbol)
 
-    public void GenObject()                                        //»ı¼º °ü·Ã º¯¼ö°ª º¯°æ ½ÃÄÑÁÖ´Â ÇÔ¼ö 
+    public void GenObject()                                        //ìƒì„± ê´€ë ¨ ë³€ìˆ˜ê°’ ë³€ê²½ ì‹œì¼œì£¼ëŠ” í•¨ìˆ˜ 
     {
-        isGen = false;                                             //»ı¼º ¿Ï·á µÇ¾úÀ¸´Ï boolÀ» false º¯°æ
-        timeCheck = 1.0f;                                          //»ı¼º ¿Ï·á ÈÄ 1.0ÃÊ·Î ½Ã°£ ÃÊ±âÈ­
+        isGen = false;                                             //ìƒì„± ì™„ë£Œ ë˜ì—ˆìœ¼ë‹ˆ boolì„ false ë³€ê²½
+        timeCheck = 1.0f;                                          //ìƒì„± ì™„ë£Œ í›„ 1.0ì´ˆë¡œ ì‹œê°„ ì´ˆê¸°í™”
     }
 
     // Start is called before the first frame update
@@ -23,23 +23,23 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    { 
-        if(isGen==false)                                            //isGen ÇÃ·¹±×°¡ falseÀÏ °æ¿ì
+    {
+        if (isGen == false)                                            //isGen í”Œë ˆê·¸ê°€ falseì¼ ê²½ìš°
         {
-            timeCheck -= Time.deltaTime;                            //¸Å ÇÁ·¹ÀÓ µ¹¾Æ°¡¸é¼­ ½Ã°£À» °¨¼Ò ½ÃÅ²´Ù.
-            if(timeCheck<0.0f)                                      //0ÃÊ ÀÌÇÏ°¡ µÇ¾úÀ» °æ¿ì
+            timeCheck -= Time.deltaTime;                            //ë§¤ í”„ë ˆì„ ëŒì•„ê°€ë©´ì„œ ì‹œê°„ì„ ê°ì†Œ ì‹œí‚¨ë‹¤.
+            if (timeCheck < 0.0f)                                      //0ì´ˆ ì´í•˜ê°€ ë˜ì—ˆì„ ê²½ìš°
             {
-                int RandNumber = Random.Range(0, 3);                //0~2ÀÇ ·£´ı ³Ñ¹ö »ı¼º
-                GameObject Temp = Instantiate(breadObject[0]);     //ÇÁ¸®ÆÕ »ı¼ºÈÄ Temp ¿ÀºêÁ§Æ®¿¡ ³Ö´Â´Ù.
-                Temp.transform.position = genTransform.position;    //°íÁ¤ À§Ä¡¿¡ »ı¼º½ÃÅ²´Ù.
+                int RandNumber = Random.Range(0,3);                //0~2ì˜ ëœë¤ ë„˜ë²„ ìƒì„±
+                GameObject Temp = Instantiate(breadObject[0]);      //í”„ë¦¬íŒ¹ ìƒì„±í›„ Temp ì˜¤ë¸Œì íŠ¸ì— ë„£ëŠ”ë‹¤.
+                Temp.transform.position = genTransform.position;   //ê³ ì • ìœ„ì¹˜ì— ìƒì„±ì‹œí‚¨ë‹¤.
                 isGen = true;
             }
         }
     }
-    public void MergeObject(int index,Vector3 position)            //Ãæµ¹ÇÑ ¹°Ã¼ÀÇ index ¹øÈ£¿Í À§Ä¡¸¦ °¡Á®¿Â´Ù.
+    public void MergeObject(int index, Vector3 position)           //ì¶©ëŒí•œ ë¬¼ì²´ì˜ index ë²ˆí˜¸ì™€ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
     {
-        GameObject Temp = Instantiate(breadObject[index]);        //»ı¼ºµÈ °úÀÏ ¿ÀºêÁ§Æ®¸¦ Temp¿¡ ³Ö´Â´Ù.
-        Temp.transform.position = position;                        //Temp ¿ÀºêÁ§Æ®ÀÇ À§Ä¡´Â ÇÔ¼ö·Î ¹Ş¾Æ¿Â À§Ä¡°ª
-        Temp.GetComponent<CircleObject>().Used();                  //»ı¼º µÇ¾úÀ» ¶§ »ç¿ëµÇ¾ú´Ù°í Ç¥½Ã ÇØÁà¾ßÇÔ
+        GameObject Temp = Instantiate(breadObject[index]);         //ìƒì„±ëœ ê³¼ì¼ ì˜¤ë¸Œì íŠ¸ë¥¼ Tempì— ë„£ëŠ”ë‹¤.
+        Temp.transform.position = position;                        //Temp ì˜¤ë¸Œì íŠ¸ì˜ ìœ„ì¹˜ëŠ” í•¨ìˆ˜ë¡œ ë°›ì•„ì˜¨ ìœ„ì¹˜ê°’
+        Temp.GetComponent<BreadObject>().Used();                   //ìƒì„± ë˜ì—ˆì„ ë•Œ ì‚¬ìš©ë˜ì—ˆë‹¤ê³  í‘œì‹œ í•´ì¤˜ì•¼í•¨
     }
 }
