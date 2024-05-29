@@ -34,4 +34,8 @@ public class SceneChanger : MonoBehaviour
     {
         SceneManager.LoadScene("Stage3Scene");
     }
+    public void ShopSceneChange()
+    {
+        SceneManager.LoadScene("ShopScene");
+    }
 }
