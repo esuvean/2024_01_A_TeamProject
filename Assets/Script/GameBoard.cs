@@ -21,4 +21,24 @@ public class GameBoard : MonoBehaviour
     {
         FreshSlot();
     }
+    public void FreshSlot()
+    {
+        int i = 0;
+        for (; i < items.Count && i < slots.Length; i++)
+        {
+            slots[i].item = null;
+        }
+    }
+    public void AddItem(Item _item)
+    {
+        if (items.Count < slots.Length)
+        {
+            items.Add(_item);
+            FreshSlot();
+        }
+        else
+        {
+            print("슬롯이 가득 차 있습니다.");
+        }
+    }
 }
