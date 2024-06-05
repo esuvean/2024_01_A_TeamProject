@@ -1,59 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ImageClicker : MonoBehaviour
 {
-    public Sprite[] images; // 이미지 배열
-    private int currentIndex = 0; // 현재 이미지 인덱스
-    private bool hasDisplayed = false; // 이미지가 한 번 표시되었는지 여부
-
-    // 이미지를 표시할 UI 이미지
+    public Sprite[] images;
+    private int currentIndex = 0;
     public Image imageDisplay;
 
+    // 클릭 간격을 조절할 변수
+    public float clickCooldown = 0.5f;
+    private float clickTimer = 0f;
+
+    private void Awake()
+    {
+        gameObject.SetActive(true);
+    }
     void Start()
     {
         DisplayImage();
     }
 
-    void Update()
+    private void Update()
     {
-        // 이미지가 한 번 표시되었고, 마우스 왼쪽 버튼이 클릭되었다면 다음 이미지로 전환
-        if (hasDisplayed && Input.GetMouseButtonDown(0))
-        {
-            currentIndex++;
-            // 이미지 인덱스가 이미지 배열의 범위를 벗어나면 초기화
-            if (currentIndex >= images.Length)
-            {
-                currentIndex = 0;
-            }
-            DisplayImage();
-        }
+        // 클릭 간격 타이머 업데이트
+        clickTimer -= Time.deltaTime;
 
-        // 이미지가 한 번 표시되었고, 마우스 왼쪽 버튼이 클릭되었다면 다음 이미지로 전환
-        if (hasDisplayed && Input.GetMouseButtonDown(0))
+        // 클릭을 확인하고 타이머가 0 이하인 경우에만 이미지 변경을 시도합니다.
+        if (Input.GetMouseButtonDown(0) && clickTimer <= 0f)
         {
-            Debug.Log("Mouse Clicked!"); // 디버그 로그 추가
-            currentIndex++;
-            // 이미지 인덱스가 이미지 배열의 범위를 벗어나면 초기화
-            if (currentIndex >= images.Length)
-            {
-                currentIndex = 0;
-            }
-            DisplayImage();
+            NextImage();
+            // 클릭 간격 타이머를 리셋합니다.
+            clickTimer = clickCooldown;
         }
+    }
+
+    public void NextImage()
+    {
+        currentIndex++;
+        if (currentIndex >= images.Length)
+        {
+            currentIndex = 0;
+        }
+        DisplayImage();
     }
 
     void DisplayImage()
     {
-        // 이미지가 한 번 표시되었으면 리턴
-        if (hasDisplayed)
-            return;
-
-        // 이미지 표시
         imageDisplay.sprite = images[currentIndex];
-        Debug.Log("Image Displayed: " + images[currentIndex].name); // 디버그 로그 추가
-        hasDisplayed = true;
+        Debug.Log("Image Displayed: " + images[currentIndex].name);
     }
 }

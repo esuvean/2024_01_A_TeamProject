@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         playTime = 0;
-        coin = 10000;
+        coin = 2000;
         slotDictionary = new Dictionary<int, SlotManager>();   //√ ±‚»≠
 
         for (int i = 0; i < slots.Length; i++)
