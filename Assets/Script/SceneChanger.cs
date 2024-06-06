@@ -38,4 +38,8 @@ public class SceneChanger : MonoBehaviour
     {
         SceneManager.LoadScene("ShopScene");
     }
+    public void TutorialsSceneChange()
+    {
+        SceneManager.LoadScene("TutorialsScene");
+    }
 }
