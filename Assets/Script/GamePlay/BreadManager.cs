@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BreadManager : MonoBehaviour
-{//ÀâÀº ¹°°Ç Á¤º¸ °ªÀ» °¡Áö°í ÀÖ´Â Å¬·¡½º
-    public int slotId;      //½½·Ô ¹øÈ£ (Slot Å¬·¡½º »ý¼º ÈÄ)
-    public int BreadLevel;      //¾ÆÀÌÅÛ ¹øÈ£
+{//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
+    public int slotId;      //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ (Slot Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
+    public int BreadLevel;      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
 
 
     public void InitDummy(int slotId, int BreadLevel)
-    {//ÀÎ¼ö·Î ¹ÞÀº °ªµéÀ» ClassÂÊ¿¡ ÀÔ·Â
+    {//ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Classï¿½Ê¿ï¿½ ï¿½Ô·ï¿½
         this.slotId = slotId;
         this.BreadLevel = BreadLevel;
     }
