@@ -10,9 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2028531966547712108}
   - component: {fileID: 4465443730518202799}
-  - component: {fileID: -7848990082667277612}
   - component: {fileID: 5790621617834529649}
-  - component: {fileID: 5379531828712166618}
   - component: {fileID: -9162014646194439278}
   m_Layer: 0
   m_Name: Bread_0
@@ -88,18 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-7848990082667277612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1114758265200447585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72f3483cc24376c47ac0fcb636db4bac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5790621617834529649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,19 +100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 0
   parentSlot: {fileID: 0}
---- !u!114 &5379531828712166618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1114758265200447585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a6dcb82d70c9a246adaffbe5499a763, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  price: 0
 --- !u!61 &-9162014646194439278
 BoxCollider2D:
   m_ObjectHideFlags: 0
