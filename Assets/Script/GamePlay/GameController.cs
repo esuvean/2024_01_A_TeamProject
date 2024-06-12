@@ -4,29 +4,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
-{   
-    public SlotManager[] slots;                                //°ÔÀÓ ÄÁÆ®·Ñ·¯¿¡¼­´Â Slot ¹è¿­À» °ü¸®
+{
+    public SlotManager[] slots;                                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Slot ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private Vector3 _target;
-    private BreadManager carryingBread;                      //Àâ°í ÀÖ´Â ¾ÆÀÌÅÛ Á¤º¸ °ª °ü¸®
+    private BreadManager carryingBread;                      //ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    public Dictionary<int, SlotManager> slotDictionary;       //Slot id, Slot class °ü¸®ÇÏ±â À§ÇÑ ÀÚ·á±¸Á¶
+    public Dictionary<int, SlotManager> slotDictionary;       //Slot id, Slot class ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·á±¸ï¿½ï¿½
 
     public bool isGameOver;
     public float playTime;
     public Text TimeText;
 
     public float coin;
-    public Text coinText;             //coin °ü¸® 
+    public Text coinText;             //coin ï¿½ï¿½ï¿½ï¿½ 
 
     private void Start()
     {
         playTime = 0;
         coin = 2000;
-        slotDictionary = new Dictionary<int, SlotManager>();   //ÃÊ±âÈ­
+        slotDictionary = new Dictionary<int, SlotManager>();   //ï¿½Ê±ï¿½È­
 
         for (int i = 0; i < slots.Length; i++)
-        {                                               //°¢ ½½·ÔÀÇ ID¸¦ ¼³Á¤ÇÏ°í µñ¼Å³Ê¸®¿¡ Ãß°¡
+        {                                               //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
             slots[i].id = i;
             slotDictionary.Add(i, slots[i]);
         }
@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour
             TimeText.text = " : " + (int)playTime;
             coinText.text = " : " + coin;
         }
-        
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             CreateBread();
@@ -48,24 +48,24 @@ public class GameController : MonoBehaviour
 
         if (Time.timeScale > 0)
         {
-            if (Input.GetMouseButtonDown(0)) //¸¶¿ì½º ´©¸¦ ¶§
+            if (Input.GetMouseButtonDown(0)) //ï¿½ï¿½ï¿½ì½º ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             {
                 SendRayCast();
             }
 
-            if (Input.GetMouseButton(0) && carryingBread)    //Àâ°í ÀÌµ¿½ÃÅ³ ¶§
+            if (Input.GetMouseButton(0) && carryingBread)    //ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½Å³ ï¿½ï¿½
             {
                 OnBreadSelected();
             }
 
-            if (Input.GetMouseButtonUp(0))  //¸¶¿ì½º ¹öÆ°À» ³õÀ» ¶§
+            if (Input.GetMouseButtonUp(0))  //ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             {
                 SendRayCast();
             }
         }
-        
+
     }
-    
+
     void SendRayCast()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -86,22 +86,22 @@ public class GameController : MonoBehaviour
                     }
 
                     string BreadPath = "Prefabs/Bread_Grabbed_" + slot.BreadObject.level.ToString("0");
-                    var BreadGo = (GameObject)Instantiate(Resources.Load<GameObject>(BreadPath));  // ¾ÆÀÌÅÛ »ý¼º
+                    var BreadGo = (GameObject)Instantiate(Resources.Load<GameObject>(BreadPath));  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                     BreadGo.transform.SetParent(this.transform);
                     BreadGo.transform.localPosition = Vector3.zero;
                     BreadGo.transform.localScale = Vector3.one * 5;
 
-                    carryingBread = BreadGo.GetComponent<BreadManager>();  // ½½·Ô Á¤º¸ ÀÔ·Â
+                    carryingBread = BreadGo.GetComponent<BreadManager>();  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
                     carryingBread.InitDummy(slot.id, slot.BreadObject.level);
 
                     slot.BreadGrabbed();
                 }
                 else if (slot.state == SlotManager.SLOTSTATE.EMPTY && carryingBread != null)
                 {
-                    slot.CreateBread(carryingBread.BreadLevel);  // Àâ°í ÀÖ´Â °Í ½½·Ô À§Ä¡¿¡ »ý¼º
-                    Destroy(carryingBread.gameObject);  // Àâ°í ÀÖ´Â °Í ÆÄ±«
-                    carryingBread = null;  // carryingBread ÃÊ±âÈ­
+                    slot.CreateBread(carryingBread.BreadLevel);  // ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                    Destroy(carryingBread.gameObject);  // ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ ï¿½Ä±ï¿½
+                    carryingBread = null;  // carryingBread ï¿½Ê±ï¿½È­
                 }
                 else if (slot.state == SlotManager.SLOTSTATE.FULL && carryingBread != null)
                 {
@@ -113,11 +113,11 @@ public class GameController : MonoBehaviour
 
                     if (slot.BreadObject.level == carryingBread.BreadLevel)
                     {
-                        OnBreadMergedWithTarget(slot.id);  // º´ÇÕ ÇÔ¼ö È£Ãâ
+                        OnBreadMergedWithTarget(slot.id);  // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ È£ï¿½ï¿½
                     }
                     else
                     {
-                        OnBreadCarryFail();  // ¾ÆÀÌÅÛ ¹èÄ¡ ½ÇÆÐ
+                        OnBreadCarryFail();  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
                     }
                 }
             }
@@ -125,28 +125,28 @@ public class GameController : MonoBehaviour
         else
         {
             if (!carryingBread) return;
-            OnBreadCarryFail();  // ¾ÆÀÌÅÛ ¹èÄ¡ ½ÇÆÐ
+            OnBreadCarryFail();  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         }
     }
 
 
     void OnBreadSelected()
-    {   //¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏ°í ¸¶¿ì½º À§Ä¡·Î ÀÌµ¿ 
-        _target = Camera.main.ScreenToWorldPoint(Input.mousePosition);  //ÁÂÇ¥º¯È¯
+    {   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ìµï¿½ 
+        _target = Camera.main.ScreenToWorldPoint(Input.mousePosition);  //ï¿½ï¿½Ç¥ï¿½ï¿½È¯
         _target.z = 0;
         var delta = 10 * Time.deltaTime;
         delta *= Vector3.Distance(transform.position, _target);
         carryingBread.transform.position = Vector3.MoveTowards(carryingBread.transform.position, _target, delta);
     }
-    
+
     void OnBreadMergedWithTarget(int targetSlotId)
     {
         if (carryingBread.BreadLevel < 4)
         {
             var slot = GetSlotById(targetSlotId);
-            Destroy(slot.BreadObject.gameObject);            //slot¿¡ ÀÖ´Â ¹°Ã¼ ÆÄ±«
-            slot.CreateBread(carryingBread.BreadLevel + 1);       //½½·Ô¿¡ ´ÙÀ½ ¹øÈ£ ¹°Ã¼ »ý¼º
-            Destroy(carryingBread.gameObject);               //Àâ°í ÀÖ´Â ¹°Ã¼ ÆÄ±«
+            Destroy(slot.BreadObject.gameObject);            //slotï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Ã¼ ï¿½Ä±ï¿½
+            slot.CreateBread(carryingBread.BreadLevel + 1);       //ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
+            Destroy(carryingBread.gameObject);               //ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Ã¼ ï¿½Ä±ï¿½
         }
         else
         {
@@ -155,21 +155,21 @@ public class GameController : MonoBehaviour
     }
 
     void OnBreadCarryFail()
-    {//¾ÆÀÌÅÛ ¹èÄ¡ ½ÇÆÐ ½Ã ½ÇÇà
-        var slot = GetSlotById(carryingBread.slotId);        //½½·Ô À§Ä¡ È®ÀÎ
-        slot.CreateBread(carryingBread.BreadLevel);               //ÇØ´ç ½½·Ô¿¡ ´Ù½Ã »ý¼º
-        Destroy(carryingBread.gameObject);                   //Àâ°í ÀÖ´Â ¹°Ã¼ ÆÄ±«
-        carryingBread = null;                                // carryingBread ÃÊ±âÈ­
+    {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        var slot = GetSlotById(carryingBread.slotId);        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ È®ï¿½ï¿½
+        slot.CreateBread(carryingBread.BreadLevel);               //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Destroy(carryingBread.gameObject);                   //ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Ã¼ ï¿½Ä±ï¿½
+        carryingBread = null;                                // carryingBread ï¿½Ê±ï¿½È­
     }
 
     void PlaceRandomBread()
-    {//·£´ýÇÑ ½½·Ô¿¡ ¾ÆÀÌÅÛ ¹èÄ¡
+    {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         if (AllSlotsOccupied())
         {
             return;
         }
 
-        var rand = UnityEngine.Random.Range(0, slots.Length); //À¯´ÏÆ¼ ·£´ýÇÔ¼ö¸¦ °¡Á®¿Í¼­ 0 ~ ¹è¿­ Å©±â »çÀÌ °ª
+        var rand = UnityEngine.Random.Range(0, slots.Length); //ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ 0 ~ ï¿½è¿­ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         var slot = GetSlotById(rand);
         while (slot.state == SlotManager.SLOTSTATE.FULL)
         {
@@ -189,10 +189,10 @@ public class GameController : MonoBehaviour
     }
 
     bool AllSlotsOccupied()
-    {//¸ðµç ½½·ÔÀÌ Ã¤¿öÁ® ÀÖ´ÂÁö È®ÀÎ
-        foreach(var slot in slots)                       //foreach¹®À» ÅëÇØ¼­ Slots ¹è¿­À» °Ë»ç ÈÄ
+    {//ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
+        foreach (var slot in slots)                       //foreachï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ Slots ï¿½è¿­ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½
         {
-            if (slot.state == SlotManager.SLOTSTATE.EMPTY)       //ºñ¾îÀÖ´ÂÁö È®ÀÎ
+            if (slot.state == SlotManager.SLOTSTATE.EMPTY)       //ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             {
                 return false;
             }
@@ -201,7 +201,7 @@ public class GameController : MonoBehaviour
     }
 
     SlotManager GetSlotById(int id)
-    {//½½·Ô ID·Î µñ¼Å³Ê¸®¿¡¼­ Slot Å¬·¡½º¸¦ ¸®ÅÏ
+    {//ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ï¿½ï¿½ Slot Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         return slotDictionary[id];
     }
 }

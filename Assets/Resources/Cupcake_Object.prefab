@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1198721877495631306}
   - component: {fileID: 3671003573673689800}
   - component: {fileID: 6881018935942746565}
+  - component: {fileID: -5494061266043383244}
   m_Layer: 0
   m_Name: Cupcake_Object
   m_TagString: Bread
@@ -171,3 +172,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2799ac1c3a7a72d4f86bbfd7a0ac40e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-5494061266043383244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7316036430443338981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6dcb82d70c9a246adaffbe5499a763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  price: 1900
