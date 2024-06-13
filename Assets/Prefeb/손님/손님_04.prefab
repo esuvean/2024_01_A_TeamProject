@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3381484576662341318}
   - component: {fileID: 5782921273252435617}
   m_Layer: 5
-  m_Name: "\uC190\uB2D8_01"
+  m_Name: "\uC190\uB2D8_04"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e2e6a0816b28fd243ad1171b614b77e7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ef159d8beee97b745bef9097a007b660, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
