@@ -33,7 +33,7 @@ public class Timer : MonoBehaviour
 
             if (curTime <= 0)
             {
-                Debug.Log("½Ã°£ Á¾·á");
+                Debug.Log("ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½");
                 curTime = 0;
                 yield break;
             }

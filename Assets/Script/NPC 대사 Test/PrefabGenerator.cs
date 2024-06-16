@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class PrefabGenerator : MonoBehaviour
 {
-    public GameObject[] prefabOptions; // ÇÁ¸®ÆÕ ¿É¼Çµé
-    public string[] textOptions; // ÅØ½ºÆ® ¿É¼Çµé
-    public string[] itemNames; // ¾ÆÀÌÅÛ ÀÌ¸§ ¿É¼Çµé
-    public string[] dialogueOptions; // ´ëÈ­ ¿É¼Çµé
-    public Sprite[] imageOptions; // ÀÌ¹ÌÁö ¿É¼Çµé
-    public Transform spawnPoint; // »ý¼º À§Ä¡
+    public GameObject[] prefabOptions; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½É¼Çµï¿½
+    public string[] textOptions; // ï¿½Ø½ï¿½Æ® ï¿½É¼Çµï¿½
+    public string[] itemNames; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½É¼Çµï¿½
+    public string[] dialogueOptions; // ï¿½ï¿½È­ ï¿½É¼Çµï¿½
+    public Sprite[] imageOptions; // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½É¼Çµï¿½
+    public Transform spawnPoint; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 
     void Start()
     {
@@ -17,14 +17,14 @@ public class PrefabGenerator : MonoBehaviour
 
     void GeneratePrefab()
     {
-        // ·£´ýÇÑ ÇÁ¸®ÆÕ ¼±ÅÃ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         int randomPrefabIndex = Random.Range(0, prefabOptions.Length);
         GameObject prefabToSpawn = prefabOptions[randomPrefabIndex];
 
-        // ÇÁ¸®ÆÕ »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         GameObject spawnedPrefab = Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
 
-        // ÅØ½ºÆ® »ý¼º
+        // ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         Text textComponent = spawnedPrefab.GetComponentInChildren<Text>();
         if (textComponent != null && textOptions.Length > 0)
         {
@@ -33,20 +33,20 @@ public class PrefabGenerator : MonoBehaviour
             textComponent.text = combinedText;
         }
 
-        // ÀÌ¹ÌÁö »ý¼º
+        // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Image imageComponent = spawnedPrefab.GetComponentInChildren<Image>();
         if (imageComponent != null && imageOptions.Length > 0)
         {
-            // ÅØ½ºÆ®¿Í °ü·ÃµÈ ÀÌ¹ÌÁö Ã£±â
-            string itemName = textComponent.text.Split(' ')[1]; // ÅØ½ºÆ®¿¡¼­ ¾ÆÀÌÅÛ ÀÌ¸§ ÃßÃâ
-            int itemIndex = System.Array.IndexOf(itemNames, itemName); // ¾ÆÀÌÅÛ ÀÌ¸§ÀÌ ÀÖ´Â À§Ä¡ Ã£±â
+            // ï¿½Ø½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
+            string itemName = textComponent.text.Split(' ')[1]; // ï¿½Ø½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+            int itemIndex = System.Array.IndexOf(itemNames, itemName); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Ä¡ Ã£ï¿½ï¿½
             if (itemIndex != -1 && itemIndex < imageOptions.Length)
             {
-                imageComponent.sprite = imageOptions[itemIndex]; // ÇØ´çÇÏ´Â ÀÌ¹ÌÁö·Î ¼³Á¤
+                imageComponent.sprite = imageOptions[itemIndex]; // ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
             else
             {
-                Debug.LogWarning("ÇØ´çÇÏ´Â ÀÌ¹ÌÁö¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                Debug.LogWarning("ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             }
         }
     }
