@@ -5,45 +5,45 @@ using UnityEngine;
 public class SlotManager : MonoBehaviour
 {
     
-    public enum SLOTSTATE       //½½·Ô»óÅÂ°ª
+    public enum SLOTSTATE       //ï¿½ï¿½ï¿½Ô»ï¿½ï¿½Â°ï¿½
     {
         EMPTY,
         FULL
     }
 
-    public int id;                              //½½·Ô ¹øÈ£ ID
-    public Bread BreadObject;                     //¼±¾ðÇÑ Ä¿½ºÅÒ Class ID
-    public SLOTSTATE state = SLOTSTATE.EMPTY;   //Enum °ª ¼±¾ð
+    public int id;                              //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ID
+    public Bread BreadObject;                     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä¿ï¿½ï¿½ï¿½ï¿½ Class ID
+    public SLOTSTATE state = SLOTSTATE.EMPTY;   //Enum ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private void ChangeStateTo(SLOTSTATE targetState)
-    {//ÇØ´ç ½½·ÔÀÇ »óÅÂ°ªÀ» º¯È¯ ½ÃÄÑÁÖ´Â ÇÔ¼ö
+    {//ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½
         state = targetState;
     }
 
     public void BreadGrabbed()
-    {//RayCast¸¦ ÅëÇØ¼­ ¾ÆÀÌÅÛÀ» Àâ¾ÒÀ» ¶§
-        Destroy(BreadObject.gameObject);         //±âÁ¸ ¾ÆÀÌÅÛÀ» »èÁ¦
-        ChangeStateTo(SLOTSTATE.EMPTY);         //½½·ÔÀº ºó »óÅÂ
+    {//RayCastï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        Destroy(BreadObject.gameObject);         //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        ChangeStateTo(SLOTSTATE.EMPTY);         //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     }   
     
     public void CreateBread(int id)
     {
         
-        //¾ÆÀÌÅÛ °æ·Î´Â (Assets/Resources/Prefabs/Bread_0)
-        // Resoueces.Load(path) path = "Prefabs/Bread_0" ÀÌ·±½ÄÀ¸·Î ÀÛ¼ºÇØ¾ßÇÔ.
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î´ï¿½ (Assets/Resources/Prefabs/Bread_0)
+        // Resoueces.Load(path) path = "Prefabs/Bread_0" ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½.
         string BreadPath = "Prefabs/Bread_" + id.ToString("0");
                 
         //var BreadGo = (GameObject)Instantiate(Resources.Load(BreadPath));
-        // º» Çü½ÄÀº ¸®¼Ò½º ·Îµå ½Ã Object Å¸ÀÔÀ¸·Î ¹ÝÈ¯ÇÏ±â ¶§¹®¿¡ GameObject »ý¼º½Ã Null Ref. Exception ¹ß»ýÇÔ.
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ Object Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GameObject ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Null Ref. Exception ï¿½ß»ï¿½ï¿½ï¿½.
         var BreadGo = (GameObject)Instantiate(Resources.Load<GameObject>(BreadPath));
 
         BreadGo.transform.SetParent(this.transform);
         BreadGo.transform.localPosition = new Vector3(0f, 0f, -1f);
         BreadGo.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        //¾ÆÀÌÅÛ °ª Á¤º¸¸¦ ÀÔ·Â
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
         BreadObject = BreadGo.GetComponent<Bread>();
-        BreadObject.Init(id, this); //ÇÔ¼ö¸¦ ÅëÇÑ °ª ÀÔ·Â(this -> Slot Class)
+        BreadObject.Init(id, this); //ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô·ï¿½(this -> Slot Class)
 
         ChangeStateTo(SLOTSTATE.FULL);
 
