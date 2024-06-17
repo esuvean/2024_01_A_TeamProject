@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,17 +25,38 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+
+        InitializeGameManager(); // 기존 GameManager의 초기화 메서드 호출
     }
 
-    void Start()
+    void InitializeGameManager()
     {
-        if (!isInitialized)
+        LoadCoins();
+        InitializeInventory();
+        UpdateUI();
+        isInitialized = true;
+    }
+
+    void LoadCoins()
+    {
+        // 에디터 모드에서는 초기화 값만 설정
+        coins = 2000;
+        Debug.Log("Editor mode: Coins initialized to 2000");
+    }
+
+    void SaveCoins()
+    {
+        // 에디터 모드에서는 저장하지 않음
+        Debug.Log("Editor mode: Coins not saved");
+    }
+
+    void InitializeInventory()
+    {
+        for (int i = 0; i < inventoryTexts.Length; i++)
         {
-            LoadCoins();
-            InitializeInventory();
-            UpdateUI();
-            isInitialized = true;
+            inventory.Add(i + 1, 0);
         }
     }
 
@@ -66,35 +88,28 @@ public class GameManager : MonoBehaviour
         return 0;
     }
 
-    void LoadCoins()
+    internal string GetItemName(int requiredItemID)
     {
-        // 에디터 모드에서는 초기화 값만 설정
-        coins = 2000;
-        Debug.Log("Editor mode: Coins initialized to 2000");
+        throw new NotImplementedException();
     }
 
-    void SaveCoins()
+    public int GetItemPrice(int itemID)
     {
-        // 에디터 모드에서는 저장하지 않음
-        Debug.Log("Editor mode: Coins not saved");
-    }
-
-    void InitializeInventory()
-    {
-        for (int i = 0; i < inventoryTexts.Length; i++)
+        if (itemID > 0 && itemID <= itemCosts.Length)
         {
-            inventory.Add(i + 1, 0);
+            return itemCosts[itemID - 1];
         }
+        return 0;
     }
 
     public void BuyItem(int itemID)
     {
-        if (coins >= itemCosts[itemID - 1])
+        int itemPrice = GetItemPrice(itemID);
+        if (coins >= itemPrice)
         {
-            SubtractCoin(itemCosts[itemID - 1]); // 코인 차감
+            SubtractCoin(itemPrice); // 코인 차감
             inventory[itemID]++; // 해당 아이템 갯수 증가
             Debug.Log("아이템을 구매했습니다!");
-
             UpdateUI();
         }
         else
