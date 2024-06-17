@@ -1,83 +1,118 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    //public static GameManager Instance; // 싱글톤 인스턴스
+    public static GameManager Instance;
 
-    public CoinManager coinManager; // 코인 매니저
-    private int[] inventoryCounts; // 인벤토리 아이템 갯수 배열
-    internal static object instance;
+    public Text coinText; // 코인을 표시할 텍스트
+    public int[] itemCosts; // 각 아이템의 가격
+    public Text[] inventoryTexts; // 인벤토리 아이템 갯수를 표시하는 텍스트 UI 배열
 
-    private static GameManager _instance; // 싱글톤 인스턴스
+    private int coins; // 현재 코인
+    private Dictionary<int, int> inventory = new Dictionary<int, int>(); // 아이템 인벤토리
+    private bool isInitialized = false;
 
-    private int coins = 0;
-
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<GameManager>(); // Scene에서 GameManager 찾기
-                if (_instance == null)
-                {
-                    GameObject obj = new GameObject("GameManager");
-                    _instance = obj.AddComponent<GameManager>(); // 없으면 새로 생성
-                }
-            }
-            return _instance;
-        }
-    }
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {
-            _instance = this; // 인스턴스 할당
-            DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // 이미 인스턴스가 있는 경우 중복된 GameManager 파괴
+            Destroy(gameObject);
         }
-
-        // 인벤토리 초기화 (여기서는 예시로 크기 5의 배열을 생성)
-        inventoryCounts = new int[5];
     }
 
-    // 인벤토리 아이템 갯수 반환 메서드
-    public int GetInventoryItemCount(int itemId)
+    void Start()
     {
-        // itemId에 해당하는 인벤토리 아이템 갯수 반환 (예시로 배열에서 아이템 갯수 반환)
-        return inventoryCounts[itemId - 1];
-    }
-
-    // 인벤토리 아이템 갯수 증가 메서드
-    public void IncreaseInventoryItemCount(int itemId, int amount)
-    {
-        // itemId에 해당하는 인벤토리 아이템 갯수 증가
-        inventoryCounts[itemId - 1] += amount;
-    }
-
-    // 인벤토리 아이템 갯수 감소 메서드
-    public void DecreaseInventoryItemCount(int itemId, int amount)
-    {
-        // itemId에 해당하는 인벤토리 아이템 갯수 감소
-        inventoryCounts[itemId - 1] -= amount;
-
-        // 인벤토리 갯수가 음수가 되지 않도록 보정
-        if (inventoryCounts[itemId - 1] < 0)
+        if (!isInitialized)
         {
-            inventoryCounts[itemId - 1] = 0;
+            LoadCoins();
+            InitializeInventory();
+            UpdateUI();
+            isInitialized = true;
         }
+    }
+
+    public void AddCoin(int amount)
+    {
+        coins += amount;
+        SaveCoins();
+        UpdateUI();
+    }
+
+    public void SubtractCoin(int amount)
+    {
+        coins -= amount;
+        SaveCoins();
+        UpdateUI();
     }
 
     public int GetCoins()
     {
         return coins;
     }
+
+    public int GetInventoryItemCount(int itemID)
+    {
+        if (inventory.ContainsKey(itemID))
+        {
+            return inventory[itemID];
+        }
+        return 0;
+    }
+
+    void LoadCoins()
+    {
+        // 에디터 모드에서는 초기화 값만 설정
+        coins = 2000;
+        Debug.Log("Editor mode: Coins initialized to 2000");
+    }
+
+    void SaveCoins()
+    {
+        // 에디터 모드에서는 저장하지 않음
+        Debug.Log("Editor mode: Coins not saved");
+    }
+
+    void InitializeInventory()
+    {
+        for (int i = 0; i < inventoryTexts.Length; i++)
+        {
+            inventory.Add(i + 1, 0);
+        }
+    }
+
     public void BuyItem(int itemID)
     {
-        // 아이템을 구매하는 로직을 여기에 추가
-        Debug.Log($"아이템 ID {itemID}를 구매했습니다!");
+        if (coins >= itemCosts[itemID - 1])
+        {
+            SubtractCoin(itemCosts[itemID - 1]); // 코인 차감
+            inventory[itemID]++; // 해당 아이템 갯수 증가
+            Debug.Log("아이템을 구매했습니다!");
+
+            UpdateUI();
+        }
+        else
+        {
+            Debug.Log("코인이 부족합니다!");
+        }
+    }
+
+    public void UpdateUI()
+    {
+        if (coinText != null)
+        {
+            coinText.text = " " + coins.ToString();
+        }
+
+        for (int i = 0; i < inventoryTexts.Length; i++)
+        {
+            inventoryTexts[i].text = GetInventoryItemCount(i + 1).ToString();
+        }
     }
 }

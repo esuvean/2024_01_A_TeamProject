@@ -1,38 +1,47 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    public SlotManager[] slots; // 슬롯 매니저들을 담은 배열
-    public CoinManager coinManager; // 코인 매니저
+    public SlotManager[] slots; // 슬롯 매니저들의 배열
 
+    private GameManager gameManager;
     private Vector3 _target;
-    private BreadManager carryingBread; // 들고 있는 빵을 담을 변수
+    private BreadManager carryingBread; // 현재 들고 있는 빵
 
-    public Dictionary<int, SlotManager> slotDictionary; // Slot id, Slot class 딕셔너리
+    public Dictionary<int, SlotManager> slotDictionary; // 슬롯 ID와 슬롯 매니저를 매핑한 딕셔너리
 
     public bool isGameOver;
+    public Text coinText; // 코인 텍스트
+    public string coinTextName = "CoinText"; // 코인 텍스트 오브젝트 이름
 
     private void Start()
     {
+        gameManager = GameManager.Instance;
+
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager 인스턴스를 가져올 수 없습니다.");
+            return;
+        }
+
         slotDictionary = new Dictionary<int, SlotManager>(); // 초기화
 
         for (int i = 0; i < slots.Length; i++)
-        { // 각 슬롯에 ID를 부여하고 딕셔너리에 추가
+        {
             slots[i].id = i;
             slotDictionary.Add(i, slots[i]);
         }
-        Debug.Log("GameController 초기화 완료");
+
+        UpdateCoinText();
     }
 
     void Update()
     {
         if (isGameOver)
         {
-            Debug.Log("게임 오버 상태");
-            return; // 게임 오버 상태면 Update 함수의 나머지 부분 실행 안 함
+            return;
         }
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -42,17 +51,17 @@ public class GameController : MonoBehaviour
 
         if (Time.timeScale > 0)
         {
-            if (Input.GetMouseButtonDown(0)) // 마우스 버튼 클릭 시
+            if (Input.GetMouseButtonDown(0))
             {
                 SendRayCast();
             }
 
-            if (Input.GetMouseButton(0) && carryingBread) // 빵 이동 중
+            if (Input.GetMouseButton(0) && carryingBread != null)
             {
                 OnBreadSelected();
             }
 
-            if (Input.GetMouseButtonUp(0)) // 마우스 버튼 해제 시
+            if (Input.GetMouseButtonUp(0))
             {
                 SendRayCast();
             }
@@ -76,23 +85,22 @@ public class GameController : MonoBehaviour
                         return;
                     }
 
-                    string BreadPath = "Prefabs/Bread_Grabbed_" + slot.BreadObject.level.ToString("0");
-                    var BreadGo = (GameObject)Instantiate(Resources.Load<GameObject>(BreadPath)); // 빵 생성
+                    string breadPath = "Prefabs/Bread_Grabbed_" + slot.BreadObject.level.ToString("0");
+                    var breadGO = Instantiate(Resources.Load<GameObject>(breadPath));
+                    breadGO.transform.SetParent(transform);
+                    breadGO.transform.localPosition = Vector3.zero;
+                    breadGO.transform.localScale = Vector3.one * 5;
 
-                    BreadGo.transform.SetParent(this.transform);
-                    BreadGo.transform.localPosition = Vector3.zero;
-                    BreadGo.transform.localScale = Vector3.one * 5;
-
-                    carryingBread = BreadGo.GetComponent<BreadManager>(); // 빵 매니저 할당
+                    carryingBread = breadGO.GetComponent<BreadManager>();
                     carryingBread.InitDummy(slot.id, slot.BreadObject.level);
 
                     slot.BreadGrabbed();
                 }
                 else if (slot.state == SlotManager.SLOTSTATE.EMPTY && carryingBread != null)
                 {
-                    slot.CreateBread(carryingBread.BreadLevel); // 들고 있는 빵을 슬롯에 배치
-                    Destroy(carryingBread.gameObject); // 들고 있는 빵 삭제
-                    carryingBread = null; // 초기화
+                    slot.CreateBread(carryingBread.BreadLevel);
+                    Destroy(carryingBread.gameObject);
+                    carryingBread = null;
                 }
                 else if (slot.state == SlotManager.SLOTSTATE.FULL && carryingBread != null)
                 {
@@ -104,25 +112,27 @@ public class GameController : MonoBehaviour
 
                     if (slot.BreadObject.level == carryingBread.BreadLevel)
                     {
-                        OnBreadMergedWithTarget(slot.id); // 빵 합치기
+                        OnBreadMergedWithTarget(slot.id);
                     }
                     else
                     {
-                        OnBreadCarryFail(); // 빵 배치 실패
+                        OnBreadCarryFail();
                     }
                 }
             }
         }
         else
         {
-            if (!carryingBread) return;
-            OnBreadCarryFail(); // 빵 배치 실패
+            if (carryingBread != null)
+            {
+                OnBreadCarryFail();
+            }
         }
     }
 
     void OnBreadSelected()
-    { // 빵을 선택하고 마우스 위치로 이동
-        _target = Camera.main.ScreenToWorldPoint(Input.mousePosition); // 위치 변환
+    {
+        _target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _target.z = 0;
         var delta = 10 * Time.deltaTime;
         delta *= Vector3.Distance(transform.position, _target);
@@ -134,9 +144,9 @@ public class GameController : MonoBehaviour
         if (carryingBread.BreadLevel < 4)
         {
             var slot = GetSlotById(targetSlotId);
-            Destroy(slot.BreadObject.gameObject); // 슬롯에 있는 오브젝트 삭제
-            slot.CreateBread(carryingBread.BreadLevel + 1); // 새로운 빵 생성
-            Destroy(carryingBread.gameObject); // 들고 있는 빵 삭제
+            Destroy(slot.BreadObject.gameObject);
+            slot.CreateBread(carryingBread.BreadLevel + 1);
+            Destroy(carryingBread.gameObject);
         }
         else
         {
@@ -145,44 +155,53 @@ public class GameController : MonoBehaviour
     }
 
     void OnBreadCarryFail()
-    { // 빵 배치 실패 시
-        var slot = GetSlotById(carryingBread.slotId); // 원래 슬롯 확인
-        slot.CreateBread(carryingBread.BreadLevel); // 해당 슬롯에 다시 생성
-        Destroy(carryingBread.gameObject); // 들고 있는 빵 삭제
-        carryingBread = null; // 초기화
+    {
+        var slot = GetSlotById(carryingBread.slotId);
+        slot.CreateBread(carryingBread.BreadLevel);
+        Destroy(carryingBread.gameObject);
+        carryingBread = null;
     }
 
     void PlaceRandomBread()
-    { // 랜덤한 슬롯에 빵 배치
+    {
         if (AllSlotsOccupied())
         {
             return;
         }
 
-        var rand = UnityEngine.Random.Range(0, slots.Length); // 랜덤 값 생성
+        var rand = Random.Range(0, slots.Length);
         var slot = GetSlotById(rand);
         while (slot.state == SlotManager.SLOTSTATE.FULL)
         {
-            rand = UnityEngine.Random.Range(0, slots.Length);
+            rand = Random.Range(0, slots.Length);
             slot = GetSlotById(rand);
         }
-        slot.GetComponent<SlotManager>().CreateBread(0);
+        slot.CreateBread(0);
     }
 
     public void CreateBread()
     {
-        if (coinManager.GetCoins() >= 100)
+        if (gameManager.GetCoins() >= 100)
         {
-            PlaceRandomBread();
-            coinManager.SubtractCoins(100); // Coins 메서드를 SubtractCoins로 수정
+            gameManager.SubtractCoin(100); // 코인 감소
+            PlaceRandomBread(); // 빵 생성
+        }
+        else
+        {
+            Debug.Log("코인이 부족합니다!");
         }
     }
 
+    SlotManager GetSlotById(int id)
+    {
+        return slotDictionary[id];
+    }
+
     bool AllSlotsOccupied()
-    { // 모든 슬롯이 차 있는지 확인
-        foreach (var slot in slots) // foreach로 모든 슬롯 검사
+    {
+        foreach (var slot in slots)
         {
-            if (slot.state == SlotManager.SLOTSTATE.EMPTY) // 비어있는 슬롯 확인
+            if (slot.state == SlotManager.SLOTSTATE.EMPTY)
             {
                 return false;
             }
@@ -190,8 +209,13 @@ public class GameController : MonoBehaviour
         return true;
     }
 
-    SlotManager GetSlotById(int id)
-    { // 슬롯 ID로 SlotManager 클래스 반환
-        return slotDictionary[id];
+    void UpdateCoinText()
+    {
+        coinText = GameObject.Find(coinTextName)?.GetComponent<Text>();
+
+        if (coinText != null)
+        {
+            coinText.text = " " + gameManager.GetCoins().ToString();
+        }
     }
 }

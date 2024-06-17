@@ -1317,8 +1317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85863a59a788cdc4da5b73992f2cc11a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coins: 2000
+  coinText: {fileID: 0}
   itemCosts: 10270000204e000030750000
+  inventoryTexts: []
 --- !u!224 &52692320393543554
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1797,7 +1798,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &6247168768156180525
 MonoBehaviour:
   m_ObjectHideFlags: 0
