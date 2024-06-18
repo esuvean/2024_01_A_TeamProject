@@ -3,9 +3,10 @@ using UnityEngine;
 public class Customer : MonoBehaviour
 {
     private string greeting;
-    public int requiredItemID; // 접근 권한을 public으로 변경
+    private string closing;
+    private int requiredItemID;
     private int requiredItemCount;
-    public int requiredItemPrice; // 접근 권한을 public으로 변경
+    private int requiredItemPrice;
 
     public void SetRequirements(int itemID, int itemCount, int itemPrice)
     {
@@ -24,8 +25,28 @@ public class Customer : MonoBehaviour
         greeting = text;
     }
 
+    public string GetClosing()
+    {
+        return closing;
+    }
+
+    public void SetClosing(string text)
+    {
+        closing = text;
+    }
+
     public int GetRequiredItemCount()
     {
         return requiredItemCount;
+    }
+
+    public int RequiredItemID
+    {
+        get { return requiredItemID; }
+    }
+
+    public int RequiredItemPrice
+    {
+        get { return requiredItemPrice; }
     }
 }

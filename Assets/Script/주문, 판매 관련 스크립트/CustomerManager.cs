@@ -1,55 +1,153 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CustomerManager : MonoBehaviour
 {
-    public GameObject customerPrefab; // 손님 프리팹
-    public Transform spawnPoint; // 손님이 생성될 위치
-    public Text[] requirementTexts; // 요구사항 텍스트 배열
+    public GameObject customerPrefab;
+    public Transform canvasTransform;
+    public Text greetingText;
+    public Text itemText;
+    public Text quantityText;
+    public Text closingText;
+    public Image itemImage;
 
-    private Customer currentCustomer; // 현재 생성된 손님
+    private List<Customer> customers = new List<Customer>();
+    private Customer currentCustomer;
+    private GameManager gameManager;
+    public static GameManager Instance;
 
     void Start()
     {
-        SpawnInitialCustomer();
+        gameManager = GameManager.Instance;
+
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager 인스턴스를 가져올 수 없습니다.");
+            return;
+        }
+
+        CreateCustomer();
     }
 
-    void SpawnInitialCustomer()
+    void Update()
     {
-        SpawnCustomer();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            CreateCustomer();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            SellItemToCustomer();
+        }
     }
 
-    void SpawnCustomer()
+    void CreateCustomer()
     {
-        // 손님 생성
-        GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
-        currentCustomer = customerObj.GetComponent<Customer>();
+        if (customerPrefab == null || canvasTransform == null)
+        {
+            Debug.LogError("CustomerPrefab 또는 CanvasTransform이 설정되지 않았습니다.");
+            return;
+        }
 
-        // 손님의 요구사항 설정 (임시로 예시 설정)
-        int itemID = Random.Range(1, 4); // 예시로 아이템 ID를 1부터 3까지로 설정
-        int itemCount = Random.Range(1, 5); // 예시로 아이템 개수를 1부터 4까지로 설정
-        int itemPrice = 100; // 예시로 아이템 가격을 100으로 설정
-        string greetingText = "안녕하세요!";
+        if (currentCustomer != null)
+        {
+            return;
+        }
 
-        currentCustomer.SetGreeting(greetingText);
-        currentCustomer.SetRequirements(itemID, itemCount, itemPrice);
+        GameObject newCustomerObject = Instantiate(customerPrefab, canvasTransform);
+        newCustomerObject.transform.SetParent(canvasTransform, false);
+        newCustomerObject.transform.localScale = Vector3.one;
 
-        // 요구사항 텍스트 업데이트
-        UpdateRequirementTexts();
+        Customer newCustomer = newCustomerObject.GetComponent<Customer>();
+        if (newCustomer != null)
+        {
+            newCustomer.SetGreeting("안녕하세요!");
+            newCustomer.SetClosing("개 주세요");
+
+            int itemID = Random.Range(1, 3);
+            int itemCount = Random.Range(1, 4);
+            int itemPrice = gameManager.GetItemPrice(itemID);
+
+            newCustomer.SetRequirements(itemID, itemCount, itemPrice);
+
+            customers.Add(newCustomer);
+            SetCurrentCustomer(newCustomer);
+        }
+        else
+        {
+            Debug.LogError("CustomerPrefab에 Customer 스크립트가 없습니다.");
+        }
     }
 
-    void UpdateRequirementTexts()
+    void SetCurrentCustomer(Customer customer)
     {
-        requirementTexts[0].text = $"인사: {currentCustomer.GetGreeting()}";
-        requirementTexts[1].text = $"아이템 ID: {currentCustomer.requiredItemID}";
-        requirementTexts[2].text = $"아이템 개수: {currentCustomer.GetRequiredItemCount()}";
-        requirementTexts[3].text = $"아이템 가격: {currentCustomer.requiredItemPrice}";
+        currentCustomer = customer;
+
+        if (currentCustomer != null)
+        {
+            if (greetingText != null)
+            {
+                greetingText.text = currentCustomer.GetGreeting();
+            }
+            if (itemText != null)
+            {
+                itemText.text = gameManager.GetItemName(currentCustomer.RequiredItemID);
+            }
+            if (quantityText != null)
+            {
+                quantityText.text = currentCustomer.GetRequiredItemCount().ToString();
+            }
+            if (closingText != null)
+            {
+                closingText.text = currentCustomer.GetClosing();
+            }
+            if (itemImage != null)
+            {
+                GameObject itemPrefab = gameManager.GetItemPrefab(currentCustomer.RequiredItemID);
+                if (itemPrefab != null)
+                {
+                    itemImage.sprite = itemPrefab.GetComponent<SpriteRenderer>().sprite;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("현재 손님이 설정되지 않았습니다.");
+        }
     }
 
-    // 다음 손님 생성 메서드
-    public void SpawnNextCustomer()
+    void SellItemToCustomer()
     {
-        Destroy(currentCustomer.gameObject); // 현재 손님 제거
-        SpawnCustomer(); // 새로운 손님 생성
+        if (currentCustomer != null)
+        {
+            int itemID = currentCustomer.RequiredItemID;
+            int itemCount = currentCustomer.GetRequiredItemCount();
+
+            if (gameManager.GetItemName(itemID) == itemText.text)
+            {
+                if (gameManager.GetInventoryItemCount(itemID) >= itemCount)
+                {
+                    gameManager.SubtractInventoryItem(itemID, itemCount);
+                    int totalPrice = currentCustomer.RequiredItemPrice * itemCount;
+                    gameManager.AddCoin(totalPrice);
+
+                    customers.Remove(currentCustomer);
+                    Destroy(currentCustomer.gameObject);
+
+                    currentCustomer = null;
+                    CreateCustomer(); // 다음 손님 생성
+                }
+                else
+                {
+                    Debug.Log("아이템이 충분하지 않습니다.");
+                }
+            }
+            else
+            {
+                Debug.Log("아이템이 일치하지 않습니다.");
+            }
+        }
     }
 }
