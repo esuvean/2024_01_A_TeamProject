@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BreadManager : MonoBehaviour
-{//���� ���� ���� ���� ������ �ִ� Ŭ����
+{
+    public SlotManager slotManager;
+    //���� ���� ���� ���� ������ �ִ� Ŭ����
     public int slotId;      //���� ��ȣ (Slot Ŭ���� ���� ��)
     public int BreadLevel;      //������ ��ȣ
 

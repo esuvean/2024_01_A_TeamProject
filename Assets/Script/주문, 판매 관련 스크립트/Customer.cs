@@ -8,6 +8,9 @@ public class Customer : MonoBehaviour
     private int requiredItemCount;
     private int requiredItemPrice;
 
+    public delegate void CustomerAction();
+    public static event CustomerAction OnCustomerFinishedOrder;
+
     public void SetRequirements(int itemID, int itemCount, int itemPrice)
     {
         requiredItemID = itemID;

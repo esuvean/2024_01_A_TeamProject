@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameTimer : MonoBehaviour
+public class GameTimer_2 : MonoBehaviour
 {
     public Text timerText; // 타이머를 표시할 텍스트
     public Button endButton; // 게임 종료 버튼
     public Text endText; // 게임 종료 텍스트
-    private float timeRemaining = 45f;
+    private float timeRemaining = 50f;
     private bool timerIsRunning = false;
     private GameController gameController; // GameController 참조
 

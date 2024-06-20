@@ -18,7 +18,7 @@ public class ItemShop : MonoBehaviour
             return;
         }
 
-        UpdateUI();
+        UpdateUI(); // 초기화 시 UI 업데이트
     }
 
     public void BuyItem(int itemID)
@@ -29,11 +29,11 @@ public class ItemShop : MonoBehaviour
             return;
         }
 
-        if (gameManager.GetCoins() >= gameManager.itemCosts[itemID - 1])
+        if (gameManager.GetCoins() >= gameManager.GetItemPrice(itemID))
         {
-            gameManager.BuyItem(itemID); // GameManager의 BuyItem 메서드 호출
+            gameManager.BuyItem(itemID); // 아이템 구매 처리
             Debug.Log("아이템을 구매했습니다!");
-            UpdateUI();
+            UpdateUI(); // 구매 후 UI 업데이트
         }
         else
         {
@@ -43,10 +43,10 @@ public class ItemShop : MonoBehaviour
 
     void Update()
     {
-        // 코인 텍스트와 인벤토리 텍스트 업데이트
+        // 매 프레임마다 코인 텍스트와 인벤토리 텍스트 업데이트
         if (gameManager != null)
         {
-            coinsText.text = " " + gameManager.GetCoins().ToString();
+            coinsText.text = gameManager.GetCoins().ToString();
 
             for (int i = 0; i < inventoryTexts.Length; i++)
             {
@@ -57,7 +57,7 @@ public class ItemShop : MonoBehaviour
 
     void OnEnable()
     {
-        // 씬 활성화 시에도 UI 업데이트
+        // 활성화 시 UI 업데이트
         UpdateUI();
     }
 
@@ -69,7 +69,7 @@ public class ItemShop : MonoBehaviour
             return;
         }
 
-        coinsText.text = " " + gameManager.GetCoins().ToString();
+        coinsText.text = gameManager.GetCoins().ToString();
 
         for (int i = 0; i < inventoryTexts.Length; i++)
         {
