@@ -36,21 +36,25 @@ public class GameManager : MonoBehaviour
 
     void InitializeItemPrefabs()
     {
-        // 각 아이템 ID에 해당하는 프리팹을 매핑합니다.
-        // 예를 들어 아이템 ID 1에는 "Bread_1" 프리팹이라고 가정하면:
+        // 각 아이템 ID에 해당하는 프리팹을 Resources 폴더에서 로드합니다.
         for (int i = 0; i < itemNames.Length; i++)
         {
-            GameObject prefab = Resources.Load<GameObject>(itemNames[i]);
+            // Item Text에 표시된 이름으로 프리팹을 로드합니다.
+            string prefabName = "Bread_" + (i + 1); // 예시: Bread_1, Bread_2, ...
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/" + prefabName);
+
             if (prefab != null)
             {
                 itemPrefabsMap.Add(i + 1, prefab);
             }
             else
             {
-                Debug.LogError("아이템 ID에 해당하는 프리팹을 찾을 수 없습니다: " + itemNames[i]);
+                Debug.LogError("아이템 ID에 해당하는 프리팹을 찾을 수 없습니다: " + prefabName);
             }
         }
     }
+
+
 
     public GameObject GetItemPrefab(int itemID)
     {
@@ -60,7 +64,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("아이템 ID에 해당하는 프리팹이 없습니다: " + itemID);
+            Debug.LogError("아이템 ID에 해당하는 프리팹을 찾을 수 없습니다: " + itemID);
             return null;
         }
     }
@@ -128,7 +132,14 @@ public class GameManager : MonoBehaviour
             if (coins >= itemCosts[itemID - 1])
             {
                 SubtractCoin(itemCosts[itemID - 1]); // 코인 차감
-                inventory[itemID]++; // 해당 아이템 갯수 증가
+                if (inventory.ContainsKey(itemID))
+                {
+                    inventory[itemID]++; // 해당 아이템 갯수 증가
+                }
+                else
+                {
+                    inventory[itemID] = 1; // 처음 구매하는 아이템의 경우
+                }
                 Debug.Log("아이템을 구매했습니다!");
 
                 UpdateUI();
@@ -162,6 +173,10 @@ public class GameManager : MonoBehaviour
         if (inventory.ContainsKey(itemID))
         {
             inventory[itemID] -= count;
+            if (inventory[itemID] <= 0)
+            {
+                inventory.Remove(itemID);
+            }
             UpdateUI();
         }
     }

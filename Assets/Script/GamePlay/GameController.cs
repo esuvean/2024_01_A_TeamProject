@@ -190,6 +190,7 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("코인이 부족합니다!");
         }
+        UpdateCoinText();
     }
 
     SlotManager GetSlotById(int id)

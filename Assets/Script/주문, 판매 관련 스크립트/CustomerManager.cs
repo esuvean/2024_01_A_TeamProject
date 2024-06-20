@@ -15,7 +15,6 @@ public class CustomerManager : MonoBehaviour
     private List<Customer> customers = new List<Customer>();
     private Customer currentCustomer;
     private GameManager gameManager;
-    public static GameManager Instance;
 
     void Start()
     {
@@ -27,7 +26,7 @@ public class CustomerManager : MonoBehaviour
             return;
         }
 
-        CreateCustomer();
+        CreateCustomer(); // 시작할 때 첫 번째 손님 생성
     }
 
     void Update()
@@ -37,7 +36,7 @@ public class CustomerManager : MonoBehaviour
             CreateCustomer();
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1)) // 오른쪽 클릭 감지
         {
             SellItemToCustomer();
         }
@@ -53,7 +52,7 @@ public class CustomerManager : MonoBehaviour
 
         if (currentCustomer != null)
         {
-            return;
+            return; // 현재 손님이 있는 경우 다음 손님 생성하지 않음
         }
 
         GameObject newCustomerObject = Instantiate(customerPrefab, canvasTransform);
@@ -66,8 +65,8 @@ public class CustomerManager : MonoBehaviour
             newCustomer.SetGreeting("안녕하세요!");
             newCustomer.SetClosing("개 주세요");
 
-            int itemID = Random.Range(1, 3);
-            int itemCount = Random.Range(1, 4);
+            int itemID = Random.Range(1, 3); // 1부터 2까지의 아이템 ID 랜덤 설정
+            int itemCount = Random.Range(1, 4); // 1부터 3까지의 아이템 갯수 랜덤 설정
             int itemPrice = gameManager.GetItemPrice(itemID);
 
             newCustomer.SetRequirements(itemID, itemCount, itemPrice);
@@ -105,16 +104,40 @@ public class CustomerManager : MonoBehaviour
             }
             if (itemImage != null)
             {
-                GameObject itemPrefab = gameManager.GetItemPrefab(currentCustomer.RequiredItemID);
-                if (itemPrefab != null)
-                {
-                    itemImage.sprite = itemPrefab.GetComponent<SpriteRenderer>().sprite;
-                }
+                SetItemImage(currentCustomer.RequiredItemID);
             }
         }
         else
         {
             Debug.LogError("현재 손님이 설정되지 않았습니다.");
+        }
+    }
+
+    void SetItemImage(int itemID)
+    {
+        string imageName = "";
+
+        switch (itemID)
+        {
+            case 1:
+                imageName = "Bread_1";
+                break;
+            case 2:
+                imageName = "Bread_2";
+                break;
+            default:
+                Debug.LogError("알 수 없는 아이템 ID입니다: " + itemID);
+                return;
+        }
+
+        Sprite itemSprite = Resources.Load<Sprite>("Images/" + imageName);
+        if (itemSprite != null)
+        {
+            itemImage.sprite = itemSprite;
+        }
+        else
+        {
+            Debug.LogError("이미지를 로드할 수 없습니다: " + imageName);
         }
     }
 
@@ -125,28 +148,38 @@ public class CustomerManager : MonoBehaviour
             int itemID = currentCustomer.RequiredItemID;
             int itemCount = currentCustomer.GetRequiredItemCount();
 
-            if (gameManager.GetItemName(itemID) == itemText.text)
+            int currentBreadCount = SlotManager.GetTotalBreadCount(itemID);
+            Debug.Log($"현재 빵의 수량: {currentBreadCount}, 요청된 빵의 수량: {itemCount}");
+
+            if (currentBreadCount >= itemCount)
             {
-                if (gameManager.GetInventoryItemCount(itemID) >= itemCount)
+                // SlotManager에서 빵을 인벤토리에서 제거하고 BreadGrabbed 메서드를 호출하여 Bread 오브젝트를 제거
+                for (int i = 0; i < itemCount; i++)
                 {
-                    gameManager.SubtractInventoryItem(itemID, itemCount);
-                    int totalPrice = currentCustomer.RequiredItemPrice * itemCount;
-                    gameManager.AddCoin(totalPrice);
-
-                    customers.Remove(currentCustomer);
-                    Destroy(currentCustomer.gameObject);
-
-                    currentCustomer = null;
-                    CreateCustomer(); // 다음 손님 생성
+                    foreach (var slot in FindObjectsOfType<SlotManager>())
+                    {
+                        if (slot.state == SlotManager.SLOTSTATE.FULL && slot.BreadObject != null && slot.BreadObject.level == itemID)
+                        {
+                            slot.BreadGrabbed();
+                            break;
+                        }
+                    }
                 }
-                else
-                {
-                    Debug.Log("아이템이 충분하지 않습니다.");
-                }
+
+                // 판매 대금 증가
+                int totalPrice = currentCustomer.RequiredItemPrice * itemCount;
+                gameManager.AddCoin(totalPrice);
+
+                customers.Remove(currentCustomer);
+                Destroy(currentCustomer.gameObject);
+                currentCustomer = null;
+
+                // 다음 손님 생성
+                CreateCustomer();
             }
             else
             {
-                Debug.Log("아이템이 일치하지 않습니다.");
+                Debug.Log("아이템이 충분하지 않습니다.");
             }
         }
     }
