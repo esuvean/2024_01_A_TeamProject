@@ -4185,7 +4185,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7c1465d66cbd1543a84327fa6eb1720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerPrefab: {fileID: 73715406599268242, guid: ba4509a2ff5d74648aadc22127ddb9aa, type: 3}
+  customerPrefabs:
+  - {fileID: 73715406599268242, guid: ba4509a2ff5d74648aadc22127ddb9aa, type: 3}
+  - {fileID: 5273873322947443873, guid: 4fda71a3568b7994bb268f9a292adaf3, type: 3}
+  - {fileID: 5273873322947443873, guid: 05b236d5153327542b0482c960dfec5d, type: 3}
+  - {fileID: 5273873322947443873, guid: 2ee31937ee1a55c4cbef475c71860602, type: 3}
+  - {fileID: 5273873322947443873, guid: 641c92ac162ea22498da74d924e2b047, type: 3}
   canvasTransform: {fileID: 1330899797}
   greetingText: {fileID: 4128750845648082443}
   itemText: {fileID: 4977729765902181475}
@@ -6561,9 +6566,6 @@ MonoBehaviour:
   - "\uBAA8\uB2DD\uBE75"
   - "\uC2DD\uBE75"
   inventoryTexts: []
-  itemPrefabs:
-  - {fileID: 8162391997035269136, guid: 62178959c54cbd04f993aa6e61c34a6b, type: 3}
-  - {fileID: 1598020961014624080, guid: 5987ccd9f8961fb49be7be429cbc7201, type: 3}
 --- !u!1 &3256825808630349004
 GameObject:
   m_ObjectHideFlags: 0

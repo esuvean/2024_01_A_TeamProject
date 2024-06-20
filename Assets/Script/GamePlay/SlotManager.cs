@@ -16,7 +16,7 @@ public class SlotManager : MonoBehaviour
 
     private static Dictionary<int, int> breadInventory = new Dictionary<int, int>();
 
-    private void ChangeStateTo(SLOTSTATE targetState)
+    public void ChangeStateTo(SLOTSTATE targetState)
     {
         state = targetState;
     }
@@ -25,13 +25,9 @@ public class SlotManager : MonoBehaviour
     {
         if (BreadObject != null)
         {
-            int breadLevel = BreadObject.level; // Bread의 레벨 정보 가져오기
-            Destroy(BreadObject.gameObject); // Bread 오브젝트 제거
+            Destroy(BreadObject.gameObject);
             BreadObject = null;
             ChangeStateTo(SLOTSTATE.EMPTY);
-
-            // 인벤토리에서 Bread 수량 감소
-            RemoveBreadFromInventory(breadLevel);
         }
     }
 
@@ -81,18 +77,6 @@ public class SlotManager : MonoBehaviour
             }
             Debug.Log($"Bread Level {breadLevel} removed. Remaining: {(breadInventory.ContainsKey(breadLevel) ? breadInventory[breadLevel] : 0)}");
 
-        }
-    }
-    private void RemoveBreadFromInventory(int breadLevel)
-    {
-        if (breadInventory.ContainsKey(breadLevel))
-        {
-            breadInventory[breadLevel]--;
-            if (breadInventory[breadLevel] <= 0)
-            {
-                breadInventory.Remove(breadLevel);
-            }
-            Debug.Log($"Bread Level {breadLevel} removed from inventory. Remaining: {(breadInventory.ContainsKey(breadLevel) ? breadInventory[breadLevel] : 0)}");
         }
     }
 }

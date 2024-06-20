@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CustomerManager : MonoBehaviour
 {
-    public GameObject customerPrefab;
+    public GameObject[] customerPrefabs; // CustomerPrefab을 배열로 변경
     public Transform canvasTransform;
     public Text greetingText;
     public Text itemText;
@@ -44,7 +44,7 @@ public class CustomerManager : MonoBehaviour
 
     void CreateCustomer()
     {
-        if (customerPrefab == null || canvasTransform == null)
+        if (customerPrefabs == null || customerPrefabs.Length == 0 || canvasTransform == null)
         {
             Debug.LogError("CustomerPrefab 또는 CanvasTransform이 설정되지 않았습니다.");
             return;
@@ -55,7 +55,9 @@ public class CustomerManager : MonoBehaviour
             return; // 현재 손님이 있는 경우 다음 손님 생성하지 않음
         }
 
-        GameObject newCustomerObject = Instantiate(customerPrefab, canvasTransform);
+        // 랜덤으로 CustomerPrefab 선택
+        int randomIndex = Random.Range(0, customerPrefabs.Length);
+        GameObject newCustomerObject = Instantiate(customerPrefabs[randomIndex], canvasTransform);
         newCustomerObject.transform.SetParent(canvasTransform, false);
         newCustomerObject.transform.localScale = Vector3.one;
 
@@ -76,7 +78,7 @@ public class CustomerManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("CustomerPrefab에 Customer 스크립트가 없습니다.");
+            Debug.LogError("선택된 CustomerPrefab에 Customer 스크립트가 없습니다.");
         }
     }
 
@@ -153,22 +155,31 @@ public class CustomerManager : MonoBehaviour
 
             if (currentBreadCount >= itemCount)
             {
-                // SlotManager에서 빵을 인벤토리에서 제거하고 BreadGrabbed 메서드를 호출하여 Bread 오브젝트를 제거
+                // 아이템 삭제 로직
                 for (int i = 0; i < itemCount; i++)
                 {
+                    bool itemRemoved = false;
                     foreach (var slot in FindObjectsOfType<SlotManager>())
                     {
                         if (slot.state == SlotManager.SLOTSTATE.FULL && slot.BreadObject != null && slot.BreadObject.level == itemID)
                         {
-                            slot.BreadGrabbed();
+                            Destroy(slot.BreadObject.gameObject);
+                            slot.BreadObject = null;
+                            slot.ChangeStateTo(SlotManager.SLOTSTATE.EMPTY); // 여기서 접근 오류 발생 가능성 있음
+                            itemRemoved = true;
                             break;
                         }
                     }
+
+                    if (!itemRemoved)
+                    {
+                        Debug.LogError($"아이템 ID {itemID}에 해당하는 BreadObject를 찾을 수 없습니다.");
+                    }
                 }
 
-                // 판매 대금 증가
+                SlotManager.RemoveBread(itemID, itemCount); // SlotManager에서 빵 제거
                 int totalPrice = currentCustomer.RequiredItemPrice * itemCount;
-                gameManager.AddCoin(totalPrice);
+                gameManager.AddCoin(totalPrice); // 코인 추가
 
                 customers.Remove(currentCustomer);
                 Destroy(currentCustomer.gameObject);
